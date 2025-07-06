@@ -90,6 +90,7 @@ Duct tape.";
         assert_eq!(vec!["safe, fast, productive."], search(query, content));
     }
 
+    #[test]
     fn case_insensetive() {
         let query = "rUsT";
         let content = "\
