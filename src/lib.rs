@@ -1,6 +1,7 @@
 use std::env;
 use std::error::Error;
 use std::fs;
+use std::io::Lines;
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let content = fs::read_to_string(config.file_path)?;
@@ -61,26 +62,19 @@ impl Config {
     }
 }
 
-// TODO: could be better with iterators.
+
 fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
-    let mut v: Vec<&str> = Vec::new();
-    for line in content.lines() {
-        if line.contains(query) {
-            v.push(line);
-        }
-    }
-    v
+    content
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 pub fn search_case_insensetive<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
-    let query = query.to_lowercase(); // !risky, won’t be 100% accurate.
-    let mut v = Vec::new();
-    for line in content.lines() {
-        if line.to_lowercase().contains(&query) {
-            v.push(line);
-        }
-    }
-    v
+    content
+        .lines()
+        .filter(|line| line.to_lowercase().contains(query.to_lowercase().as_str()))
+        .collect()
 }
 
 #[cfg(test)]
